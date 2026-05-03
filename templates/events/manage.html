@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Create Event - Eventful Planner{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in-down">
+    <div class="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden relative">
+        <!-- Decorative Header Background -->
+        <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-r from-pink-500 to-indigo-500 opacity-10"></div>
+        
+        <div class="px-8 py-10 md:px-12 relative z-10 border-b border-slate-100">
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
+                <i class="fas fa-magic text-pink-500"></i> Plan Your Event
+            </h1>
+            <p class="mt-2 text-slate-500 text-lg">Bring your vision to life. Let our smart features guide your budget.</p>
+        </div>
+        
+        <div class="px-8 py-10 md:px-12 relative z-10 bg-white">
+            <form action="{{ url_for('event.create') }}" method="POST" class="space-y-8">
+                
+                <!-- Event Name -->
+                <div>
+                    <label for="name" class="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Event Name</label>
+                    <input type="text" name="name" id="name" required class="block w-full bg-slate-50 border border-slate-200 rounded-xl shadow-sm py-3.5 px-4 focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-300 focus:bg-white transition-all text-slate-900" placeholder="e.g. John & Jane's Dream Wedding">
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Date -->
+                    <div>
+                        <label for="date" class="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Event Date</label>
+                        <div class="relative">
+                            <i class="fas fa-calendar-alt absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+                            <input type="date" name="date" id="date" required class="block w-full bg-slate-50 border border-slate-200 rounded-xl shadow-sm py-3.5 pl-11 pr-4 focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-300 focus:bg-white transition-all text-slate-900 cursor-pointer">
+                        </div>
+                    </div>
+                    
+                    <!-- Type -->
+                    <div>
+                        <label for="type" class="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Event Type</label>
+                        <select name="type" id="type" required class="block w-full bg-slate-50 border border-slate-200 rounded-xl shadow-sm py-3.5 px-4 focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-300 focus:bg-white transition-all text-slate-900 cursor-pointer">
+                            <option value="" disabled selected>Select an event type...</option>
+                            <option value="Wedding">Wedding</option>
+                            <option value="Corporate">Corporate Gala</option>
+                            <option value="Birthday">Birthday Party</option>
+                            <option value="Conference">Conference</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Guests -->
+                    <div>
+                        <label for="guests" class="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Estimated Guests</label>
+                        <div class="relative">
+                            <i class="fas fa-users absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+                            <input type="number" name="guests" id="guests" min="1" required class="block w-full bg-slate-50 border border-slate-200 rounded-xl shadow-sm py-3.5 pl-11 pr-4 focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-300 focus:bg-white transition-all text-slate-900" placeholder="e.g. 150">
+                        </div>
+                    </div>
+                    
+                    <!-- Budget -->
+                    <div>
+                        <label for="budget" class="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Total Budget ($)</label>
+                        <div class="relative">
+                            <i class="fas fa-dollar-sign absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+                            <input type="number" name="budget" id="budget" min="1" step="0.01" required class="block w-full bg-slate-50 border border-slate-200 rounded-xl shadow-sm py-3.5 pl-11 pr-4 focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-300 focus:bg-white transition-all text-slate-900" placeholder="e.g. 15000">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Smart Budget Splitter (JS feature) -->
+                <div class="bg-indigo-50/50 rounded-2xl p-8 border border-indigo-100 hidden transition-all duration-500 opacity-0 transform translate-y-4" id="budget-split-container">
+                    <h3 class="text-base font-bold text-indigo-900 mb-6 flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-500 flex items-center justify-center shadow-sm">
+                            <i class="fas fa-magic"></i>
+                        </div>
+                        Smart Budget Recommendation
+                    </h3>
+                    <div class="space-y-5">
+                        <!-- Venue -->
+                        <div>
+                            <div class="flex justify-between items-center text-sm mb-2">
+                                <span class="font-bold text-slate-700">Venue (40%)</span>
+                                <span class="font-bold text-indigo-700 text-lg" id="budget-venue">$0</span>
+                            </div>
+                            <div class="w-full bg-white rounded-full h-2.5 shadow-inner overflow-hidden border border-slate-100">
+                                <div class="bg-indigo-500 h-full rounded-full transition-all duration-1000" style="width: 40%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Catering -->
+                        <div>
+                            <div class="flex justify-between items-center text-sm mb-2">
+                                <span class="font-bold text-slate-700">Catering (35%)</span>
+                                <span class="font-bold text-pink-600 text-lg" id="budget-catering">$0</span>
+                            </div>
+                            <div class="w-full bg-white rounded-full h-2.5 shadow-inner overflow-hidden border border-slate-100">
+                                <div class="bg-pink-500 h-full rounded-full transition-all duration-1000" style="width: 35%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Misc -->
+                        <div>
+                            <div class="flex justify-between items-center text-sm mb-2">
+                                <span class="font-bold text-slate-700">Decoration & Misc (25%)</span>
+                                <span class="font-bold text-amber-600 text-lg" id="budget-misc">$0</span>
+                            </div>
+                            <div class="w-full bg-white rounded-full h-2.5 shadow-inner overflow-hidden border border-slate-100">
+                                <div class="bg-amber-400 h-full rounded-full transition-all duration-1000" style="width: 25%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-8 mt-8 border-t border-slate-100 flex flex-col-reverse sm:flex-row justify-end gap-4">
+                    <a href="{{ url_for('user.dashboard') }}" class="w-full sm:w-auto inline-flex justify-center items-center py-3.5 px-8 border border-slate-200 rounded-full shadow-sm text-sm font-bold text-slate-600 bg-white hover:bg-slate-50 focus:outline-none transition-colors">
+                        Cancel
+                    </a>
+                    <button type="submit" class="w-full sm:w-auto inline-flex justify-center items-center py-3.5 px-10 border border-transparent shadow-lg shadow-pink-200 text-sm font-bold rounded-full text-white bg-gradient-to-r from-pink-500 to-indigo-500 hover:from-pink-600 hover:to-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-all hover:-translate-y-0.5">
+                        Create Event <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const budgetInput = document.getElementById('budget');
+        const budgetSplitContainer = document.getElementById('budget-split-container');
+        
+        budgetInput.addEventListener('input', function() {
+            const budget = parseFloat(this.value);
+            if (!isNaN(budget) && budget > 0) {
+                budgetSplitContainer.classList.remove('hidden');
+                // Trigger reflow for transition
+                void budgetSplitContainer.offsetWidth;
+                budgetSplitContainer.classList.remove('opacity-0', 'translate-y-4');
+                budgetSplitContainer.classList.add('opacity-100', 'translate-y-0');
+                
+                document.getElementById('budget-venue').textContent = '$' + (budget * 0.40).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('budget-catering').textContent = '$' + (budget * 0.35).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('budget-misc').textContent = '$' + (budget * 0.25).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            } else {
+                budgetSplitContainer.classList.remove('opacity-100', 'translate-y-0');
+                budgetSplitContainer.classList.add('opacity-0', 'translate-y-4');
+                setTimeout(() => {
+                    if (budgetSplitContainer.classList.contains('opacity-0')) {
+                        budgetSplitContainer.classList.add('hidden');
+                    }
+                }, 500);
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Venues - Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-fade-in-down">
+    
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+            <h1 class="text-3xl font-extrabold text-slate-900 flex items-center gap-3">
+                <i class="fas fa-map-marker-alt text-indigo-500"></i> Manage Venues
+            </h1>
+            <p class="text-slate-500 mt-1">View, add, and manage your platform's venue listings.</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="{{ url_for('admin.dashboard') }}" class="px-5 py-2.5 bg-white border border-slate-200 text-slate-600 font-bold rounded-full shadow-sm hover:bg-slate-50 transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i> Dashboard
+            </a>
+            <a href="{{ url_for('admin.add_venue') }}" class="px-5 py-2.5 bg-gradient-to-r from-pink-500 to-indigo-500 text-white font-bold rounded-full shadow-md shadow-indigo-200 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+                <i class="fas fa-plus mr-2"></i> Add Venue
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-100">
+                        <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Venue</th>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Location</th>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Capacity</th>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Price/Day</th>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for venue in venues %}
+                    <tr class="hover:bg-slate-50 transition-colors group">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl overflow-hidden bg-slate-100 shrink-0">
+                                    {% if venue.images %}
+                                    <img src="{{ venue.images[0].image_url }}" class="w-full h-full object-cover">
+                                    {% else %}
+                                    <div class="w-full h-full flex items-center justify-center text-slate-400"><i class="fas fa-building"></i></div>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <div class="text-sm font-bold text-slate-900">{{ venue.name }}</div>
+                                    <div class="text-xs text-amber-500 flex items-center gap-1">
+                                        <i class="fas fa-star"></i> {{ venue.rating }}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            {{ venue.location }}
+                        </td>
+                        <td class="px-6 py-4 text-sm text-slate-600">
+                            {{ venue.capacity }} <i class="fas fa-users text-slate-400 ml-1"></i>
+                        </td>
+                        <td class="px-6 py-4 text-sm font-bold text-slate-900">
+                            ${{ venue.price }}
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex justify-end gap-2">
+                                <a href="{{ url_for('venue.detail', venue_id=venue.id) }}" target="_blank" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 flex items-center justify-center transition-colors" title="View Venue">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                                <form action="{{ url_for('admin.delete_venue', id=venue.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this venue? This action cannot be undone.');" class="inline">
+                                    <button type="submit" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:text-red-600 hover:bg-red-50 flex items-center justify-center transition-colors" title="Delete Venue">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-12 text-center text-slate-500">
+                            <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300 text-2xl">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <p class="font-bold text-slate-700 mb-1">No venues found</p>
+                            <p class="text-sm">Start by adding your first venue to the platform.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

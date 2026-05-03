@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Eventful Planner{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#ec4899', // pink-500
+                        secondary: '#6366f1', // indigo-500
+                        dark: '#1e293b', // slate-800
+                        accent: '#fbcfe8', // pink-200
+                        light: '#f8fafc', // slate-50
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<style>
+    .blob {
+        position: absolute;
+        filter: blur(80px);
+        z-index: 0;
+        opacity: 0.6;
+        animation: float 20s ease-in-out infinite alternate;
+    }
+    .blob-1 {
+        top: -10%; left: -10%;
+        width: 50vw; height: 50vw;
+        background: radial-gradient(circle, rgba(236,72,153,0.4) 0%, rgba(236,72,153,0) 70%);
+        animation-delay: 0s;
+    }
+    .blob-2 {
+        bottom: -10%; right: -10%;
+        width: 60vw; height: 60vw;
+        background: radial-gradient(circle, rgba(99,102,241,0.4) 0%, rgba(99,102,241,0) 70%);
+        animation-delay: -5s;
+    }
+    .blob-3 {
+        top: 40%; left: 40%;
+        width: 40vw; height: 40vw;
+        background: radial-gradient(circle, rgba(20,184,166,0.3) 0%, rgba(20,184,166,0) 70%);
+        animation-delay: -10s;
+    }
+    @keyframes float {
+        0% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(5%, 10%) scale(1.1); }
+        66% { transform: translate(-10%, 5%) scale(0.9); }
+        100% { transform: translate(0, -5%) scale(1); }
+    }
+</style>
+<body class="bg-slate-50 text-slate-800 font-sans flex flex-col min-h-screen selection:bg-pink-200 selection:text-pink-900 overflow-x-hidden">
+    
+    <!-- Modern Animated Background -->
+    <div class="fixed inset-0 w-full h-full pointer-events-none z-[-1] overflow-hidden">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="absolute inset-0 bg-white/40 backdrop-blur-[100px]"></div>
+    </div>
+    
+    <!-- Navbar -->
+    <nav class="bg-white/80 backdrop-blur-md shadow-sm border-b border-slate-100 sticky top-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="{{ url_for('index') }}" class="flex items-center gap-3 group">
+                        <div class="w-10 h-10 rounded-xl overflow-hidden shadow-md group-hover:shadow-lg transition-all duration-300 transform group-hover:-translate-y-0.5 bg-white flex items-center justify-center border border-slate-100">
+                            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Eventful Logo" class="w-full h-full object-cover">
+                        </div>
+                        <span class="font-bold text-2xl text-slate-900 tracking-tight">Eventful</span>
+                    </a>
+                </div>
+                
+                <!-- Center Links -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="{{ url_for('index') }}" class="text-slate-600 hover:text-pink-600 font-medium transition-colors relative group">
+                        Home
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-pink-500 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="{{ url_for('venue.list') }}" class="text-slate-600 hover:text-pink-600 font-medium transition-colors relative group">
+                        Venues
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-pink-500 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="{{ url_for('venue.list') }}" class="text-slate-600 hover:text-pink-600 font-medium transition-colors relative group">
+                        Services
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-pink-500 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="mailto:aabhabharti060@gmail.com" class="text-slate-600 hover:text-pink-600 font-medium transition-colors relative group">
+                        Contact
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-pink-500 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                </div>
+
+                <!-- Right Menu -->
+                <div class="flex items-center space-x-5">
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.role == 'admin' %}
+                            <a href="{{ url_for('admin.dashboard') }}" class="text-slate-600 hover:text-pink-600 font-medium transition-colors">Dashboard</a>
+                        {% else %}
+                            <a href="{{ url_for('user.dashboard') }}" class="text-slate-600 hover:text-pink-600 font-medium transition-colors">Dashboard</a>
+                        {% endif %}
+                        <div class="relative group cursor-pointer z-50">
+                            <div class="w-11 h-11 rounded-full bg-gradient-to-r from-pink-100 to-indigo-100 flex items-center justify-center text-indigo-700 font-bold shadow-sm transition-all hover:shadow-md border border-indigo-200">
+                                {{ current_user.name[0].upper() }}
+                            </div>
+                            <div class="absolute right-0 top-full w-56 pt-3 hidden group-hover:block transition-all duration-300 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0">
+                                <div class="bg-white rounded-2xl shadow-xl py-2 border border-slate-100 overflow-hidden">
+                                    <div class="px-4 py-3 border-b border-slate-50 mb-1 bg-slate-50/50">
+                                        <p class="text-sm font-bold text-slate-900 truncate">{{ current_user.name }}</p>
+                                        <p class="text-xs text-slate-500 truncate">{{ current_user.email }}</p>
+                                    </div>
+                                    <a href="{{ url_for('admin.dashboard') if current_user.role == 'admin' else url_for('user.dashboard') }}" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-pink-50 hover:text-pink-600 transition-colors flex items-center gap-2"><i class="fas fa-chart-line text-slate-400 w-4"></i> Dashboard</a>
+                                    {% if current_user.role != 'admin' %}
+                                    <a href="{{ url_for('user.settings') }}" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-pink-50 hover:text-pink-600 transition-colors flex items-center gap-2"><i class="fas fa-cog text-slate-400 w-4"></i> Account Settings</a>
+                                    {% endif %}
+                                    <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors flex items-center gap-2 border-t border-slate-50"><i class="fas fa-sign-out-alt text-red-400 w-4"></i> Sign out</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="{{ url_for('auth.login') }}" class="text-slate-600 hover:text-pink-600 font-medium transition-colors">Log in</a>
+                    {% endif %}
+                    
+                    <a href="{{ url_for('venue.list') }}" class="hidden sm:flex items-center justify-center bg-gradient-to-r from-pink-500 to-indigo-500 hover:from-pink-600 hover:to-indigo-600 text-white px-6 py-2.5 rounded-full font-medium transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5">
+                        Book Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-6 relative z-40">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="space-y-3">
+                {% for category, message in messages %}
+                    {% set alert_class = 'bg-blue-50/90 text-blue-800 border-blue-200' %}
+                    {% set icon = 'fa-info-circle' %}
+                    {% if category == 'success' %}
+                        {% set alert_class = 'bg-emerald-50/90 text-emerald-800 border-emerald-200' %}
+                        {% set icon = 'fa-check-circle' %}
+                    {% elif category == 'danger' %}
+                        {% set alert_class = 'bg-rose-50/90 text-rose-800 border-rose-200' %}
+                        {% set icon = 'fa-exclamation-circle' %}
+                    {% elif category == 'warning' %}
+                        {% set alert_class = 'bg-amber-50/90 text-amber-800 border-amber-200' %}
+                        {% set icon = 'fa-exclamation-triangle' %}
+                    {% endif %}
+                    <div class="flex items-center gap-3 p-4 text-sm rounded-xl border backdrop-blur-sm shadow-sm {{ alert_class }} animate-fade-in-down" role="alert">
+                        <i class="fas {{ icon }} text-lg"></i>
+                        <span class="font-medium">{{ message }}</span>
+                    </div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-grow w-full relative">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-100 mt-20 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 rounded-xl overflow-hidden bg-white shadow-sm border border-slate-100 flex items-center justify-center">
+                            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Eventful Logo" class="w-full h-full object-cover">
+                        </div>
+                        <span class="font-bold text-xl text-slate-900">Eventful Planner</span>
+                    </div>
+                    <p class="text-slate-500 leading-relaxed max-w-sm">
+                        Making your dream events come true with premium venues, elegant design, and seamless planning tools.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-slate-900 mb-6 uppercase text-sm tracking-wider">Explore</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-slate-500 hover:text-pink-600 transition-colors">Venues</a></li>
+                        <li><a href="#" class="text-slate-500 hover:text-pink-600 transition-colors">Services</a></li>
+                        <li><a href="#" class="text-slate-500 hover:text-pink-600 transition-colors">Pricing</a></li>
+                        <li><a href="#" class="text-slate-500 hover:text-pink-600 transition-colors">About Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-slate-900 mb-6 uppercase text-sm tracking-wider">Contact</h4>
+                    <ul class="space-y-4">
+                        <li class="text-slate-500"><i class="fas fa-envelope mr-2 text-pink-400"></i> aabhabharti060@gmail.com</li>
+                        <li class="text-slate-500"><i class="fas fa-phone mr-2 text-indigo-400"></i> +1 (555) 123-4567</li>
+                        <li class="text-slate-500"><i class="fas fa-map-marker-alt mr-2 text-pink-400"></i> New York, NY</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-slate-400 text-sm">
+                    &copy; 2026 Eventful Planner. All rights reserved.
+                </p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-slate-400 hover:text-pink-600 transition-colors"><i class="fab fa-facebook text-lg"></i></a>
+                    <a href="#" class="text-slate-400 hover:text-pink-600 transition-colors"><i class="fab fa-twitter text-lg"></i></a>
+                    <a href="#" class="text-slate-400 hover:text-pink-600 transition-colors"><i class="fab fa-instagram text-lg"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+
+{% block title %}Eventful Planner - Book Your Dream Event{% endblock %}
+
+{% block body_class %}bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-pink-50 via-slate-50 to-indigo-50{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="relative overflow-hidden bg-light pt-12 pb-24 lg:pt-20 lg:pb-32">
+    <!-- Floating background decorative elements -->
+    <div class="absolute top-0 left-1/4 w-96 h-96 bg-pink-100 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-float"></div>
+    <div class="absolute top-40 right-1/4 w-96 h-96 bg-indigo-100 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-float-delayed"></div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="lg:grid lg:grid-cols-12 lg:gap-16 items-center">
+            
+            <!-- Left Content -->
+            <div class="lg:col-span-6 text-center lg:text-left mb-16 lg:mb-0 animate-fade-in-down">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-pink-50 border border-pink-100 text-pink-600 font-medium text-sm mb-6">
+                    <i class="fas fa-star text-xs"></i>
+                    <span>Premium Event Booking Platform</span>
+                </div>
+                
+                <h1 class="text-5xl lg:text-6xl font-bold text-slate-900 tracking-tight leading-tight mb-6">
+                    Make your <span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-indigo-500">Dream Event</span> come true.
+                </h1>
+                
+                <p class="text-lg text-slate-500 mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                    Discover breathtaking venues, seamless planning tools, and everything you need to create unforgettable memories. Your perfect day starts here.
+                </p>
+
+                <!-- Floating Search Bar -->
+                <form action="{{ url_for('venue.list') }}" method="GET" class="bg-white p-3 rounded-2xl shadow-xl shadow-slate-200/50 flex flex-col sm:flex-row gap-3 max-w-2xl mx-auto lg:mx-0 border border-slate-100">
+                    <div class="relative flex-grow flex items-center px-4 py-2 bg-slate-50 rounded-xl border border-transparent focus-within:border-pink-200 focus-within:bg-white transition-all">
+                        <i class="fas fa-map-marker-alt text-slate-400 mr-3 text-lg"></i>
+                        <input type="text" name="location" placeholder="Search venues by city..." class="w-full bg-transparent border-none focus:ring-0 text-slate-700 placeholder-slate-400 py-2 outline-none">
+                    </div>
+                    <div class="relative flex-grow sm:flex-grow-0 flex items-center px-4 py-2 bg-slate-50 rounded-xl border border-transparent focus-within:border-pink-200 focus-within:bg-white transition-all">
+                        <i class="fas fa-calendar-alt text-slate-400 mr-3 text-lg"></i>
+                        <input type="date" class="w-full sm:w-36 bg-transparent border-none focus:ring-0 text-slate-700 placeholder-slate-400 py-2 outline-none text-sm cursor-pointer">
+                    </div>
+                    <button type="submit" class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 rounded-xl font-semibold transition-all shadow-md flex justify-center items-center gap-2">
+                        <i class="fas fa-search"></i> Find
+                    </button>
+                </form>
+
+                <!-- Feature Icons -->
+                <div class="flex items-center justify-center lg:justify-start gap-8 mt-12 text-slate-500 font-medium text-sm">
+                    <div class="flex flex-col items-center gap-2">
+                        <div class="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-pink-500 border border-slate-50">
+                            <i class="fas fa-gem text-xl"></i>
+                        </div>
+                        <span>Luxury Venues</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-2">
+                        <div class="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-indigo-500 border border-slate-50">
+                            <i class="fas fa-utensils text-xl"></i>
+                        </div>
+                        <span>Fine Catering</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-2">
+                        <div class="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-amber-500 border border-slate-50">
+                            <i class="fas fa-holly-berry text-xl"></i>
+                        </div>
+                        <span>Elegant Decor</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Content (Image) -->
+            <div class="lg:col-span-6 relative animate-fade-in">
+                <!-- Main Image -->
+                <div class="relative rounded-[2rem] overflow-hidden shadow-2xl shadow-indigo-200 aspect-[4/5] sm:aspect-auto sm:h-[600px] w-full border-8 border-white group">
+                    <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1000&auto=format&fit=crop" alt="Dream Wedding" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+                    
+                    <!-- Overlay Play Button -->
+                    <div class="absolute inset-0 bg-slate-900/10 flex items-center justify-center">
+                        <button class="w-20 h-20 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-white shadow-lg hover:bg-white/40 transition-all hover:scale-110">
+                            <i class="fas fa-play text-2xl ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Floating Card Decoration -->
+                <div class="absolute -bottom-6 -left-6 bg-white p-5 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-4 animate-float">
+                    <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div>
+                        <p class="font-bold text-slate-900">100% Verified</p>
+                        <p class="text-sm text-slate-500">Premium Venues</p>
+                    </div>
+                </div>
+                
+                <!-- Floating Decorative Shapes -->
+                <div class="absolute -top-10 -right-10 text-pink-300 opacity-50 animate-float-delayed">
+                    <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="40" stroke="currentColor" stroke-width="4" stroke-dasharray="10 10"/>
+                    </svg>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<!-- Featured Venues Section (Aesthetic Preview) -->
+<div class="bg-white py-24 border-t border-slate-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl font-bold text-slate-900 mb-4">Discover Top Destinations</h2>
+        <p class="text-slate-500 max-w-2xl mx-auto mb-12">Browse our hand-picked selection of the most beautiful venues for your next big event.</p>
+        
+        <!-- Venues Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 text-left">
+            {% for venue in recommended_venues %}
+            <div class="bg-white rounded-[2rem] overflow-hidden shadow-lg shadow-slate-200/50 border border-slate-100 group hover:-translate-y-2 transition-all duration-300">
+                <div class="h-64 overflow-hidden relative">
+                    {% if venue.images %}
+                        <img src="{{ venue.images[0].image_url }}" alt="{{ venue.name }}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                    {% else %}
+                        <div class="w-full h-full bg-slate-200"></div>
+                    {% endif %}
+                    
+                    <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-slate-700 shadow-sm flex items-center gap-1">
+                        <i class="fas fa-star text-amber-400"></i> {{ venue.rating }}
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-900 line-clamp-1">{{ venue.name }}</h3>
+                            <p class="text-slate-500 text-sm mt-1 flex items-center gap-1">
+                                <i class="fas fa-map-marker-alt text-pink-400"></i> {{ venue.location }}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex items-center justify-between border-t border-slate-100 pt-4">
+                        <div>
+                            <span class="text-sm text-slate-500">From</span>
+                            <div class="text-xl font-extrabold text-slate-900">${{ venue.price }}<span class="text-sm font-normal text-slate-500">/day</span></div>
+                        </div>
+                        <a href="{{ url_for('venue.detail', venue_id=venue.id) }}" class="px-5 py-2.5 bg-gradient-to-r from-pink-500 to-indigo-500 hover:from-pink-600 hover:to-indigo-600 text-white text-sm font-semibold rounded-xl shadow-md shadow-indigo-200 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+                            Explore
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <a href="{{ url_for('venue.list') }}" class="inline-flex items-center gap-2 bg-slate-50 text-slate-700 hover:text-slate-900 hover:bg-slate-100 px-8 py-4 rounded-xl font-bold transition-all border border-slate-200 shadow-sm hover:shadow-md">
+            View All Venues <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+</div>
+
+<!-- Statistics Section -->
+<div class="bg-indigo-900 py-20 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-20">
+        <div class="absolute top-0 -left-1/4 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl"></div>
+        <div class="absolute bottom-0 -right-1/4 w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl"></div>
+    </div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 divide-y md:divide-y-0 md:divide-x divide-indigo-800">
+            <div class="pt-8 md:pt-0">
+                <div class="text-5xl font-extrabold text-white mb-2">500+</div>
+                <div class="text-indigo-200 font-medium uppercase tracking-wide">Premium Venues</div>
+            </div>
+            <div class="pt-8 md:pt-0">
+                <div class="text-5xl font-extrabold text-white mb-2">10k+</div>
+                <div class="text-indigo-200 font-medium uppercase tracking-wide">Events Planned</div>
+            </div>
+            <div class="pt-8 md:pt-0">
+                <div class="text-5xl font-extrabold text-white mb-2">99%</div>
+                <div class="text-indigo-200 font-medium uppercase tracking-wide">Happy Clients</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works Section -->
+<div class="bg-slate-50 py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <h2 class="text-3xl font-bold text-slate-900 mb-4">How Eventful Works</h2>
+            <p class="text-slate-500 text-lg">Planning your dream event has never been simpler. Follow these three easy steps to bring your vision to life.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+            <!-- Connecting Line (Desktop Only) -->
+            <div class="hidden md:block absolute top-12 left-1/6 right-1/6 h-0.5 bg-gradient-to-r from-pink-200 via-indigo-200 to-pink-200 z-0"></div>
+            
+            <!-- Step 1 -->
+            <div class="relative z-10 flex flex-col items-center text-center group">
+                <div class="w-24 h-24 rounded-full bg-white shadow-xl shadow-pink-100 flex items-center justify-center text-pink-500 text-3xl font-bold mb-6 border-4 border-pink-50 transform group-hover:scale-110 transition-transform duration-300">
+                    1
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-3">Discover Venues</h3>
+                <p class="text-slate-500 leading-relaxed">Browse our curated list of premium venues. Use smart filters to find the perfect match for your budget, location, and guest count.</p>
+            </div>
+            
+            <!-- Step 2 -->
+            <div class="relative z-10 flex flex-col items-center text-center group">
+                <div class="w-24 h-24 rounded-full bg-white shadow-xl shadow-indigo-100 flex items-center justify-center text-indigo-500 text-3xl font-bold mb-6 border-4 border-indigo-50 transform group-hover:scale-110 transition-transform duration-300">
+                    2
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-3">Book & Pay Securely</h3>
+                <p class="text-slate-500 leading-relaxed">Select your date and lock in your reservation with our seamless, encrypted checkout process. No hidden fees or surprises.</p>
+            </div>
+            
+            <!-- Step 3 -->
+            <div class="relative z-10 flex flex-col items-center text-center group">
+                <div class="w-24 h-24 rounded-full bg-white shadow-xl shadow-amber-100 flex items-center justify-center text-amber-500 text-3xl font-bold mb-6 border-4 border-amber-50 transform group-hover:scale-110 transition-transform duration-300">
+                    3
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-3">Celebrate</h3>
+                <p class="text-slate-500 leading-relaxed">Show up and enjoy your perfect day. Our platform helps you track your budget and manage your event details effortlessly.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Testimonials Section -->
+<div class="bg-white py-24 border-t border-slate-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <h2 class="text-3xl font-bold text-slate-900 mb-4">Loved by Planners</h2>
+            <p class="text-slate-500 text-lg">Don't just take our word for it. Here's what our community has to say about their Eventful experience.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Review 1 -->
+            <div class="bg-slate-50 rounded-[2rem] p-8 border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                <div class="flex items-center gap-1 text-amber-400 text-sm mb-4">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+                <p class="text-slate-600 mb-8 italic">"Eventful made planning my dream wedding an absolute breeze. The venue selection was incredible, and the booking process was completely stress-free."</p>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-r from-pink-200 to-indigo-200 flex items-center justify-center text-indigo-700 font-bold shadow-sm">
+                        S
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900">Sarah Jenkins</h4>
+                        <p class="text-xs text-slate-500">Bride-to-be</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Review 2 -->
+            <div class="bg-slate-50 rounded-[2rem] p-8 border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                <div class="flex items-center gap-1 text-amber-400 text-sm mb-4">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+                <p class="text-slate-600 mb-8 italic">"As a corporate event planner, I rely on Eventful for all our company retreats. It saves me hours of research and negotiation. Highly recommended!"</p>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-r from-indigo-200 to-emerald-200 flex items-center justify-center text-emerald-700 font-bold shadow-sm">
+                        M
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900">Michael Chen</h4>
+                        <p class="text-xs text-slate-500">HR Director</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Review 3 -->
+            <div class="bg-slate-50 rounded-[2rem] p-8 border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                <div class="flex items-center gap-1 text-amber-400 text-sm mb-4">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                </div>
+                <p class="text-slate-600 mb-8 italic">"The smart budget tool alone is worth using this platform. I managed to book an incredible venue while staying 15% under my total budget."</p>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-r from-amber-200 to-pink-200 flex items-center justify-center text-pink-700 font-bold shadow-sm">
+                        E
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900">Elena Rodriguez</h4>
+                        <p class="text-xs text-slate-500">Party Host</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Banner -->
+<div class="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600 py-20 relative overflow-hidden">
+    <!-- Decorative elements -->
+    <div class="absolute top-0 right-0 w-64 h-64 bg-white rounded-full mix-blend-overlay filter blur-3xl opacity-20 transform translate-x-1/2 -translate-y-1/2"></div>
+    <div class="absolute bottom-0 left-0 w-64 h-64 bg-white rounded-full mix-blend-overlay filter blur-3xl opacity-20 transform -translate-x-1/2 translate-y-1/2"></div>
+    
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <h2 class="text-4xl font-extrabold text-white mb-6">Ready to start planning?</h2>
+        <p class="text-pink-100 text-lg mb-10">Join thousands of happy users and turn your dream event into reality today.</p>
+        
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="{{ url_for('auth.register') }}" class="inline-flex justify-center items-center gap-2 bg-white text-indigo-600 hover:bg-slate-50 px-8 py-4 rounded-full font-bold shadow-lg transition-all hover:scale-105">
+                Create Free Account
+            </a>
+            <a href="{{ url_for('venue.list') }}" class="inline-flex justify-center items-center gap-2 bg-indigo-800/40 hover:bg-indigo-800/60 text-white border border-indigo-400/30 px-8 py-4 rounded-full font-bold transition-all backdrop-blur-sm hover:scale-105">
+                Explore Venues
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

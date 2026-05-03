@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Eventful Planner{% endblock %}
+
+{% block body_class %}bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-slate-100 via-white to-purple-50{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-fade-in-down">
+    
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div>
+            <h1 class="text-3xl font-extrabold text-slate-900">Admin Dashboard</h1>
+            <p class="mt-1 text-slate-500">Monitor platform activity and manage operations.</p>
+        </div>
+        <div class="flex gap-3">
+            <a href="{{ url_for('admin.manage_venues') }}" class="inline-flex items-center gap-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900 px-5 py-2.5 rounded-full font-semibold transition-all shadow-sm">
+                <i class="fas fa-map-marker-alt text-indigo-500"></i> Manage Venues
+            </a>
+            <a href="{{ url_for('admin.manage_bookings') }}" class="inline-flex items-center gap-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900 px-5 py-2.5 rounded-full font-semibold transition-all shadow-sm">
+                <i class="fas fa-clipboard-list text-pink-500"></i> Manage Bookings
+            </a>
+        </div>
+    </div>
+
+    <!-- Quick Actions (New) -->
+    <div class="bg-white rounded-[2rem] p-6 mb-8 border border-slate-100 shadow-sm flex flex-col sm:flex-row gap-4 items-center justify-between">
+        <div class="flex items-center gap-3 text-slate-600 font-medium">
+            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+                <i class="fas fa-bolt"></i>
+            </div>
+            Quick Actions
+        </div>
+        <div class="flex flex-wrap gap-3">
+            <a href="{{ url_for('admin.add_venue') }}" class="px-5 py-2 text-sm font-bold bg-gradient-to-r from-pink-500 to-indigo-500 text-white rounded-full shadow-md shadow-indigo-200 hover:shadow-lg hover:-translate-y-0.5 transition-all flex items-center gap-2">
+                <i class="fas fa-plus"></i> Add Venue
+            </a>
+            <button class="px-5 py-2 text-sm font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-full transition-colors flex items-center gap-2">
+                <i class="fas fa-users"></i> Users
+            </button>
+            <button class="px-5 py-2 text-sm font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-full transition-colors flex items-center gap-2">
+                <i class="fas fa-file-export"></i> Export Report
+            </button>
+        </div>
+    </div>
+
+    <!-- Overview Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Users Card -->
+        <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg shadow-indigo-200 transform hover:-translate-y-1 transition-transform duration-300">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-3 bg-white/20 rounded-xl">
+                    <i class="fas fa-users text-2xl"></i>
+                </div>
+                <span class="bg-white/20 text-xs font-bold px-2 py-1 rounded-full">+12%</span>
+            </div>
+            <h3 class="text-indigo-100 font-medium mb-1">Total Users</h3>
+            <p class="text-4xl font-extrabold">{{ total_users }}</p>
+        </div>
+        
+        <!-- Venues Card -->
+        <div class="bg-gradient-to-br from-pink-500 to-rose-500 rounded-2xl p-6 text-white shadow-lg shadow-pink-200 transform hover:-translate-y-1 transition-transform duration-300">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-3 bg-white/20 rounded-xl">
+                    <i class="fas fa-map-marker-alt text-2xl"></i>
+                </div>
+            </div>
+            <h3 class="text-pink-100 font-medium mb-1">Active Venues</h3>
+            <p class="text-4xl font-extrabold">{{ total_venues }}</p>
+        </div>
+        
+        <!-- Bookings Card -->
+        <div class="bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl p-6 text-white shadow-lg shadow-teal-200 transform hover:-translate-y-1 transition-transform duration-300">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-3 bg-white/20 rounded-xl">
+                    <i class="fas fa-calendar-check text-2xl"></i>
+                </div>
+                <span class="bg-white/20 text-xs font-bold px-2 py-1 rounded-full">+8%</span>
+            </div>
+            <h3 class="text-teal-100 font-medium mb-1">Total Bookings</h3>
+            <p class="text-4xl font-extrabold">{{ total_bookings }}</p>
+        </div>
+        
+        <!-- Revenue Card -->
+        <div class="bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl p-6 text-white shadow-lg shadow-amber-200 transform hover:-translate-y-1 transition-transform duration-300">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-3 bg-white/20 rounded-xl">
+                    <i class="fas fa-dollar-sign text-2xl"></i>
+                </div>
+            </div>
+            <h3 class="text-amber-100 font-medium mb-1">Total Revenue</h3>
+            <p class="text-3xl font-extrabold">${{ total_revenue }}</p>
+        </div>
+    </div>
+
+    <!-- Charts and Data -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Chart Container -->
+        <div class="lg:col-span-2 bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fas fa-chart-line text-indigo-500"></i> Event Activity
+                </h3>
+            </div>
+            <div class="relative h-72 w-full">
+                <canvas id="eventsChart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Sidebar container -->
+        <div class="space-y-8">
+            <!-- Recent Venues -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fas fa-building text-pink-500"></i> Recent Venues
+                    </h3>
+                    <a href="{{ url_for('admin.manage_venues') }}" class="text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-colors">View All</a>
+                </div>
+                
+                <div class="space-y-4">
+                    {% for venue in recent_venues %}
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden shrink-0">
+                            {% if venue.images %}
+                            <img src="{{ venue.images[0].image_url }}" class="w-full h-full object-cover">
+                            {% else %}
+                            <div class="w-full h-full flex items-center justify-center text-slate-400"><i class="fas fa-image"></i></div>
+                            {% endif %}
+                        </div>
+                        <div class="flex-grow">
+                            <h4 class="text-sm font-bold text-slate-900">{{ venue.name }}</h4>
+                            <p class="text-xs text-slate-500">{{ venue.location }}</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-sm font-bold text-slate-700">${{ venue.price }}</span>
+                        </div>
+                    </div>
+                    {% else %}
+                    <p class="text-sm text-slate-500 text-center py-4">No venues added yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Action Required -->
+            <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-6 border border-amber-100 shadow-sm">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-500 flex items-center justify-center">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">Action Required</h3>
+                </div>
+                <p class="text-sm text-amber-800 font-medium">You have <span class="font-bold">3 pending</span> bookings to review.</p>
+                <a href="{{ url_for('admin.manage_bookings') }}" class="mt-4 inline-block w-full text-center bg-white text-amber-600 font-bold py-2 rounded-xl border border-amber-200 shadow-sm hover:bg-amber-50 transition-colors">
+                    Review Bookings
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('eventsChart').getContext('2d');
+        
+        // Use real data passed from backend
+        const rawData = {{ events_data | tojson }};
+        const labels = Object.keys(rawData);
+        const dataPoints = Object.values(rawData);
+
+        // Create gradient
+        let gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(99, 102, 241, 0.5)'); // Indigo
+        gradient.addColorStop(1, 'rgba(99, 102, 241, 0.0)');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Events Created',
+                    data: dataPoints,
+                    borderColor: '#6366f1',
+                    backgroundColor: gradient,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#6366f1',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#1e293b',
+                        padding: 12,
+                        titleFont: { size: 13, family: "'Inter', sans-serif" },
+                        bodyFont: { size: 14, family: "'Inter', sans-serif", weight: 'bold' },
+                        displayColors: false,
+                        cornerRadius: 8,
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#f1f5f9',
+                            drawBorder: false,
+                        },
+                        ticks: {
+                            color: '#94a3b8',
+                            font: { family: "'Inter', sans-serif" },
+                            stepSize: 1
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false,
+                            drawBorder: false,
+                        },
+                        ticks: {
+                            color: '#94a3b8',
+                            font: { family: "'Inter', sans-serif" }
+                        }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index',
+                },
+            }
+        });
+    });
+</script>
+{% endblock %}
