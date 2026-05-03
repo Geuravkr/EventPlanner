@@ -5,4 +5,3 @@ Flask-Bcrypt==1.0.1
 python-dotenv==1.0.0
 SQLAlchemy==2.0.23
 Werkzeug==3.0.1
-Python==3.11
